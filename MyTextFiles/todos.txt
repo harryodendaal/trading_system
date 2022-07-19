@@ -1,0 +1,15 @@
+DEFS
+1)use dollars instead of the token when saying amount going to buy
+2)choose tokens to trade by 24H change maybe volume?
+3) figure out the hwole buy/long sell/short thing.
+4) the amount a coin get depends on what?
+5) use fastapi. Then setup git system thingy
+6) end of day statistics being sent to me through telegram?
+
+MAYBES
+make strings into small letters automatically?
+start therapy after bot starts making money
+
+NOW:
+not database things yet, just make it be able to run through fastapi. THEN setup the git things and push it as version 1 
+[the pipeline setup and the git branches when pushed to main then release to the serever.]

@@ -1,0 +1,13 @@
+[INFO | 2021-01-01T00:00:00] Saved daily portfolio balance: 10000.0
+[INFO | 2021-01-01T00:01:00] SUBMITTED order: BTC-USDT, MARKET, buy, 500.0, $10.0
+[INFO | 2021-01-01T00:01:00] EXECUTED order: BTC-USDT, MARKET, buy, 500.0, $10.0
+[INFO | 2021-01-01T00:01:00] OPENED long position for BTC-USDT: qty: 500.0, entry_price: 10.0
+[INFO | 2021-01-01T00:10:00] Terminating BTC-USDT...
+[INFO | 2021-01-01T00:10:00] Closed open Fake Exchange-BTC-USDT position at 15.0 with PNL: 2500.0(100.0%) because we reached the end of the backtest session.
+[INFO | 2021-01-01T00:10:00] SUBMITTED order: BTC-USDT, MARKET, sell, -500.0, $15.0
+[INFO | 2021-01-01T00:10:00] EXECUTED order: BTC-USDT, MARKET, sell, -500.0, $15.0
+[INFO | 2021-01-01T00:10:00] Added realized PNL of 2500.0. Balance for USDT on Fake Exchange changed from 10000.0 to 12500.0
+[INFO | 2021-01-01T00:10:00] CLOSED a long trade for Fake Exchange-BTC-USDT: qty: 500.0, entry_price: 10.0, exit_price: 15.0, PNL: 2500.0 (100.0%)
+[INFO | 2021-01-01T00:10:00] CLOSED Position for BTC-USDT
+[INFO | 2021-01-01T00:10:00] cancel all remaining orders to prepare for a fresh start...
+[INFO | 2021-01-01T00:10:00] Saved daily portfolio balance: 12500.0

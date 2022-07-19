@@ -1,0 +1,11 @@
+#installing packages for conda
+python -m pip install ..
+/home/penguin/anaconda3/envs/trading/bin/pip install ccxt apscheduler
+
+########commands
+
+- use this to sync clock
+sudo hwclock -s 
+
+- run app
+uvicorn main:app --reload 
