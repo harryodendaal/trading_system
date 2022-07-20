@@ -1,6 +1,17 @@
 from ccxt import bybit
 
 
+def has_active_order(exchange: bybit, symbol: str):
+    # keep the strategy orders id in database to see
+    # which starte executed this order?
+    orders = exchange.fetch_orders(symbol)
+    for o in orders:
+        if o['status'] == 'open':
+            if o['filled'] == 0.0:
+                return True
+    return
+
+
 def has_open_position(exchange: bybit, symbol: str):
     positions = exchange.fetch_positions()
 

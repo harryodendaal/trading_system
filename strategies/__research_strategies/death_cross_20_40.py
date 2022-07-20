@@ -17,6 +17,8 @@
 # def long_ema(self):
 #     return ta.ema(self.candles, 40)
 # # normal functions
+def before(self):
+    return
 
 
 def should_long(self):
@@ -31,6 +33,9 @@ def should_short(self):
 def should_cancel(self):
     return True
 
+
+def should_cancel_entry(self):
+    return
 
 # def go_long(self):
 #     qty = utils.size_to_qty(

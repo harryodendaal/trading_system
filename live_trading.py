@@ -8,10 +8,10 @@ import ccxt
 import pandas as pd
 from ta.trend import EMAIndicator
 from pprint import pprint
-from auxillary_functions import go_trade, has_open_position
+from auxillary_functions import go_trade, has_active_order, has_open_position
 from config import APIkey, APIsecret
 from strategies.__research_strategies.death_cross_20_40 import (
-    should_cancel, should_long, should_short, update_position)
+    should_cancel, should_cancel_entry, should_long, should_short, update_position, before)
 
 # should we have a class for the overarching trading system
 # and then another class for indivdual symbols/trades?
@@ -85,9 +85,9 @@ class Live_trading():
             for symbol in self.symbols:
                 self.symbol = symbol
 
-                # create all that is needed to decide whether or not engage in trade.
-                self.prepare()
-                # this is the start of the cycle look at the current candle
+                self.prepare()  # this is kinda apart of what before should do
+                ############## START #############
+                before()
 
                 try:
                     in_trade, self.side = has_open_position(
@@ -98,27 +98,35 @@ class Live_trading():
 
                 if in_trade:
                     print("In Trade")
-                    # in update_position() check whether position should be closed
-                    # or if parameters should be updated.
+                    # used for dynamically exiting trade. and adjusting stop/take loss/profit
                     update_position(self)
 
                 if (not in_trade):
                     print("Not In Trade")
-                    # add should_cancel if order has not been executed yet.
-                    if should_long(self):
-                        go_trade('L', size, symbol, exchange)
-                        print("Long Entered")
-                    elif should_short(self):
-                        go_trade('S', size, symbol, exchange)
-                        print("Short Entered")
+
+                    if (has_active_order(exchange, symbol)):
+                        should_cancel_entry()  # only cancels the order not
+                        # the stop loss and take profit orders
+                    else:
+                        if should_long(self):
+                            go_trade('L', size, symbol, exchange)
+                            print("Long Entered")
+                        elif should_short(self):
+                            go_trade('S', size, symbol, exchange)
+                            print("Short Entered")
+                        else:
+                            should_cancel(self)
 
                 now = datetime.datetime.now()
                 print(now.strftime('%H:%M:%S ') + self.symbol + " |  ")
                 sleep(1)
-
 
         # after()  # message myself on telegram
 cerebro = Live_trading(capital=10000, symbols=[
                        'ETHUSDT', 'ETCUSDT', 'BITUSDT', 'GMTUSDT', 'OPUSDT', 'RUNEUSDT', 'TRBUSDT'], timeframe='15m',)
 cerebro.run()
 # Next up instead trave for now only with inverse perpetual
+
+# things not yet. need to add another strategy maybe.
+# for now stick with all orders later to the specific ones.
+# exchange.cancel_all_orders('ETHUSDT')

@@ -5,6 +5,11 @@ DEFS
 4) the amount a coin get depends on what?
 5) use fastapi. Then setup git system thingy
 6) end of day statistics being sent to me through telegram?
+7) what is usdt perpetual and inverse perpetual and isolated and cross
+8) how to cancel long and short active orders
+
+BIG ONES:
+1) getting the research thing to work so dont need the rest of jesse.
 
 MAYBES
 make strings into small letters automatically?
