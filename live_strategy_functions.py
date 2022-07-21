@@ -9,56 +9,56 @@ from constants import STRATEGIES
 
 
 def live_before(self):
-    STRATEGY = STRATEGIES[self.strategy]
+    strategy = STRATEGIES[self.strategy]
 
-    if STRATEGY == '1':
+    if strategy == '1':
         return death_cross_20_40.before(self)
-    elif STRATEGY == '2':
+    elif strategy == '2':
         return SimpleBollinger.before(self)
 
 
 def live_update_position(self):
-    STRATEGY = STRATEGIES[self.strategy]
+    strategy = STRATEGIES[self.strategy]
 
-    if STRATEGY == '1':
+    if strategy == '1':
         return death_cross_20_40.update_position(self)
-    elif STRATEGY == '2':
+    elif strategy == '2':
         return SimpleBollinger.update_position(self)
 
 
 def live_should_short(self):
-    STRATEGY = STRATEGIES[self.strategy]
+    strategy = STRATEGIES[self.strategy]
 
-    if STRATEGY == '1':
+    if strategy == '1':
         return death_cross_20_40.should_short(self)
-    elif STRATEGY == '2':
+    elif strategy == '2':
         return SimpleBollinger.should_short(self)
 
 
 def live_should_long(self):
-    STRATEGY = STRATEGIES[self.strategy]
+    strategy = STRATEGIES[self.strategy]
 
-    if STRATEGY == '1':
+    if strategy == '1':
         return death_cross_20_40.should_long(self)
-    elif STRATEGY == '2':
+    elif strategy == '2':
         return SimpleBollinger.should_long(self)
 
 
 def live_should_cancel_entry(self):
-    STRATEGY = STRATEGIES[self.strategy]
+    strategy = STRATEGIES[self.strategy]
 
-    if STRATEGY == '1':
+    if strategy == '1':
         return death_cross_20_40.should_cancel_entry(self)
-    elif STRATEGY == '2':
+    elif strategy == '2':
         return SimpleBollinger.should_cancel_entry(self)
 
 
 def live_should_cancel(self):
-    STRATEGY = STRATEGIES[self.strategy]
+    strategy = STRATEGIES[self.strategy]
 
-    if STRATEGY == '1':
+    if strategy == '1':
         return death_cross_20_40.should_cancel(self)
-    elif STRATEGY == '2':
+    elif strategy == '2':
         return SimpleBollinger.should_cancel(self)
 
 # def live_after(self):

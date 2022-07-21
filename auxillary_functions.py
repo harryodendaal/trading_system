@@ -1,5 +1,7 @@
-from ccxt import bybit
-from constants import EXCHANGE
+from pandas import DataFrame
+from constants import EXCHANGE, STRATEGIES
+from ta.trend import EMAIndicator, IchimokuIndicator
+from ta.volatility import BollingerBands
 
 
 def has_active_order(symbol: str):
@@ -60,3 +62,25 @@ def go_trade(action: str, size: int, symbol: str):
     o = EXCHANGE.create_order(symbol, 'market', side,
                               amount=amount)
     # print(o)
+
+
+def add_strategy_components(self, df: DataFrame):
+    strategy = STRATEGIES[self.strategy]
+
+    if strategy == '1':
+        self.short_ema = EMAIndicator(
+            close=df['Close'], window=20).ema_indicator().iloc[-1]
+        self.long_ema = EMAIndicator(
+            close=df['Close'], window=40).ema_indicator().iloc[-1]
+    elif strategy == '2':
+        self.ichimoku = IchimokuIndicator(
+            high=df['High'], low=df['Low'])
+        self.ichimoku.span_a = self.ichimoku.ichimoku_a().iloc[-1]
+        self.ichimoku.span_a = self.ichimoku.ichimoku_b().iloc[-1]
+
+        # bollinger bands
+        self.bollinger = BollingerBands(df['Close'])
+        self.bb = [self.bollinger.bollinger_hband().iloc[-1],
+                   self.bollinger.bollinger_mavg().iloc[-1]]
+
+    return

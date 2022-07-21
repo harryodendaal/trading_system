@@ -4,13 +4,9 @@
 from math import floor
 from time import sleep
 import datetime
-import ccxt
 import pandas as pd
-from ta.trend import EMAIndicator, IchimokuIndicator
-from ta.volatility import BollingerBands
 from pprint import pprint
-from auxillary_functions import fetch_position_side, fetch_position_size, go_trade, has_active_order, has_open_position
-from config import APIkey, APIsecret
+from auxillary_functions import add_strategy_components, fetch_position_side, fetch_position_size, go_trade, has_active_order, has_open_position
 from live_strategy_functions import live_before, live_should_cancel, live_should_cancel_entry, live_should_long, live_should_short, live_update_position
 from constants import EXCHANGE
 
@@ -24,14 +20,6 @@ class LiveTrading():
         self.symbols = symbols
         self.timeframe = timeframe
 
-        # self.exchange = ccxt.bybit({
-        #     'apiKey': APIkey,
-        #     'secret': APIsecret,
-        #     'enableRateLimit': True,
-        #     # 'recvWindow': 10000000,
-        #     'adjustForTimeDifference': True
-        #     # 'verbose': True,
-        # })
         self.is_long = False
         self.is_short = False
 
@@ -47,32 +35,8 @@ class LiveTrading():
                                               'Open', 'High', 'Low', 'Close', 'Volume'])
         df['Date'] = pd.to_datetime(df['Date'], unit='ms')
 
-        # death cross 20 40
-
-        self.short_ema = EMAIndicator(
-            close=df['Close'], window=20).ema_indicator().iloc[-1]
-        self.long_ema = EMAIndicator(
-            close=df['Close'], window=40).ema_indicator().iloc[-1]
-
-        # simpleBollinger
-        # ichimoku
-        self.ichimoku = IchimokuIndicator(high=df['High'], low=df['Low'])
-        self.ichimoku.span_a = self.ichimoku.ichimoku_a().iloc[-1]
-        self.ichimoku.span_a = self.ichimoku.ichimoku_b().iloc[-1]
-
-        # bollinger bands
-        self.bollinger = BollingerBands(df['Close'])
-
-        # upper band
-        self.bb = [self.bollinger.bollinger_hband().iloc[-1],
-                   self.bollinger.bollinger_mavg().iloc[-1]]
-        # self.bb[0] = self.bollinger.bollinger_hband()
-        # middle band
-        # self.bb[1] = self.bollinger.bollinger_mavg()
-
-        # call function here that determines which indicators
-        # to add depending on the
-        # strategy.
+        # add the things necessary for strategy function.
+        add_strategy_components(self, df)
 
         self.close = df['Close'].iloc[-1]
 

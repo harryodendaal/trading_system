@@ -6,6 +6,7 @@ DEFS
 7) what is usdt perpetual and inverse perpetual and isolated and cross
 8) so import the functions from strategy class and have defulats.
 9) be able to adjust the margin for isolated
+10) add filters.
 
 BIG ONES:
 1) getting the research thing to work so dont need the rest of jesse.
