@@ -47,8 +47,8 @@ class LiveTrading():
         # get side here and also amount
 
         symbol = self.symbol
-        side = fetch_position_side(EXCHANGE, symbol)
-        size = fetch_position_size(EXCHANGE, symbol)
+        side = fetch_position_side(symbol)
+        size = fetch_position_size(symbol)
 
         # generally will only be called if in position but in case
         # exit position here if not in position
