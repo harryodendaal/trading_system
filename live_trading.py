@@ -6,40 +6,32 @@ from time import sleep
 import datetime
 import ccxt
 import pandas as pd
-from ta.trend import EMAIndicator
+from ta.trend import EMAIndicator, IchimokuIndicator
+from ta.volatility import BollingerBands
 from pprint import pprint
-from auxillary_functions import go_trade, has_active_order, has_open_position
+from auxillary_functions import fetch_position_side, fetch_position_size, go_trade, has_active_order, has_open_position
 from config import APIkey, APIsecret
-from strategies.__research_strategies.death_cross_20_40 import (
-    should_cancel, should_cancel_entry, should_long, should_short, update_position, before)
+from live_strategy_functions import live_before, live_should_cancel, live_should_cancel_entry, live_should_long, live_should_short, live_update_position
+from constants import EXCHANGE
 
 # should we have a class for the overarching trading system
 # and then another class for indivdual symbols/trades?
 
-exchange = ccxt.bybit({
-    'apiKey': APIkey,
-    'secret': APIsecret,
-    'enableRateLimit': True,
-    # 'recvWindow': 10000000,
-    'adjustForTimeDifference': True
-    # 'verbose': True,
-})
 
-
-class Live_trading():
+class LiveTrading():
     def __init__(self, capital=10000, symbols=['ETHUSDT'], timeframe='15m') -> None:
         self.capital = capital
         self.symbols = symbols
         self.timeframe = timeframe
 
-        self.exchange = ccxt.bybit({
-            'apiKey': APIkey,
-            'secret': APIsecret,
-            'enableRateLimit': True,
-            # 'recvWindow': 10000000,
-            'adjustForTimeDifference': True
-            # 'verbose': True,
-        })
+        # self.exchange = ccxt.bybit({
+        #     'apiKey': APIkey,
+        #     'secret': APIsecret,
+        #     'enableRateLimit': True,
+        #     # 'recvWindow': 10000000,
+        #     'adjustForTimeDifference': True
+        #     # 'verbose': True,
+        # })
         self.is_long = False
         self.is_short = False
 
@@ -49,37 +41,72 @@ class Live_trading():
                         returns a dataframe with ohlcv and indicators caculated.
         '''
 
-        global exchange
-        bars = exchange.fetch_ohlcv(
+        bars = EXCHANGE.fetch_ohlcv(
             symbol=self.symbol, timeframe=self.timeframe, limit=100)
         df = pd.DataFrame(bars[:-1], columns=['Date',
                                               'Open', 'High', 'Low', 'Close', 'Volume'])
         df['Date'] = pd.to_datetime(df['Date'], unit='ms')
+
+        # death cross 20 40
 
         self.short_ema = EMAIndicator(
             close=df['Close'], window=20).ema_indicator().iloc[-1]
         self.long_ema = EMAIndicator(
             close=df['Close'], window=40).ema_indicator().iloc[-1]
 
-        # call function here that determines which indicators to add depending on the
+        # simpleBollinger
+        # ichimoku
+        self.ichimoku = IchimokuIndicator(high=df['High'], low=df['Low'])
+        self.ichimoku.span_a = self.ichimoku.ichimoku_a().iloc[-1]
+        self.ichimoku.span_a = self.ichimoku.ichimoku_b().iloc[-1]
+
+        # bollinger bands
+        self.bollinger = BollingerBands(df['Close'])
+
+        # upper band
+        self.bb = [self.bollinger.bollinger_hband().iloc[-1],
+                   self.bollinger.bollinger_mavg().iloc[-1]]
+        # self.bb[0] = self.bollinger.bollinger_hband()
+        # middle band
+        # self.bb[1] = self.bollinger.bollinger_mavg()
+
+        # call function here that determines which indicators
+        # to add depending on the
         # strategy.
+
+        self.close = df['Close'].iloc[-1]
+
+        # The always ones?
         return df
 
     def liquidate(self):
-        global exchange
-        side = 'short' if (self.side == "long") else "long"
+        # get side here and also amount
 
-        trade_res = exchange.create_order(
-            self.symbol, 'market', side, amount=0.05, params={'reduce_only': True})
+        symbol = self.symbol
+        side = fetch_position_side(EXCHANGE, symbol)
+        size = fetch_position_size(EXCHANGE, symbol)
 
-        print("Liquidated Position")
+        # generally will only be called if in position but in case
+        # exit position here if not in position
+        if (side == "" or size == 0):
+            return
+
+        side = 'sell' if (side == 'long') else 'buy'
+
+        trade_res = EXCHANGE.create_order(
+            symbol, 'market', side, amount=size, params={'reduce_only': True})
+        print("Liquidated " + symbol)
 
         return
 
     def run(self):
-        global exchange
-        size = floor(exchange.fetch_balance()[
-                     'USDT']['total']/len(self.symbols)/2)
+
+        self.strategy = 1
+
+        trade_size = floor(EXCHANGE.fetch_balance()[
+            'USDT']['total']/len(self.symbols)/2)
+
+        # self.liquidate()
 
         while True:
             for symbol in self.symbols:
@@ -87,11 +114,11 @@ class Live_trading():
 
                 self.prepare()  # this is kinda apart of what before should do
                 ############## START #############
-                before()
+                live_before(self)
+                # before()
 
                 try:
-                    in_trade, self.side = has_open_position(
-                        exchange, self.symbol)
+                    in_trade = has_open_position(self.symbol)
                 except Exception as e:
                     print(e)
                     continue
@@ -99,34 +126,37 @@ class Live_trading():
                 if in_trade:
                     print("In Trade")
                     # used for dynamically exiting trade. and adjusting stop/take loss/profit
-                    update_position(self)
+                    live_update_position(self)
 
                 if (not in_trade):
                     print("Not In Trade")
 
-                    if (has_active_order(exchange, symbol)):
-                        should_cancel_entry()  # only cancels the order not
+                    if (has_active_order(symbol)):
+                        # only cancels the order not
+                        live_should_cancel_entry(self)
                         # the stop loss and take profit orders
                     else:
-                        if should_long(self):
-                            go_trade('L', size, symbol, exchange)
+
+                        if live_should_long(self):
+                            go_trade('L', trade_size, symbol)
                             print("Long Entered")
-                        elif should_short(self):
-                            go_trade('S', size, symbol, exchange)
+                        elif live_should_short(self):
+                            go_trade('S', trade_size, symbol)
                             print("Short Entered")
                         else:
-                            should_cancel(self)
+                            live_should_cancel(self)
 
                 now = datetime.datetime.now()
                 print(now.strftime('%H:%M:%S ') + self.symbol + " |  ")
-                sleep(1)
+                sleep(2)
 
         # after()  # message myself on telegram
-cerebro = Live_trading(capital=10000, symbols=[
-                       'ETHUSDT', 'ETCUSDT', 'BITUSDT', 'GMTUSDT', 'OPUSDT', 'RUNEUSDT', 'TRBUSDT'], timeframe='15m',)
+symbols = ['ETHUSDT', 'ETCUSDT', 'BITUSDT',
+           'GMTUSDT', 'OPUSDT', 'RUNEUSDT', 'TRBUSDT']
+cerebro = LiveTrading(capital=10000, symbols=symbols, timeframe='15m',)
 cerebro.run()
 # Next up instead trave for now only with inverse perpetual
 
 # things not yet. need to add another strategy maybe.
 # for now stick with all orders later to the specific ones.
-# exchange.cancel_all_orders('ETHUSDT')
+# EXCHANGE.cancel_all_orders('ETHUSDT')

@@ -1,36 +1,52 @@
 from ccxt import bybit
+from constants import EXCHANGE
 
 
-def has_active_order(exchange: bybit, symbol: str):
+def has_active_order(symbol: str):
     # keep the strategy orders id in database to see
     # which starte executed this order?
-    orders = exchange.fetch_orders(symbol)
+    orders = EXCHANGE.fetch_orders(symbol)
     for o in orders:
         if o['status'] == 'open':
             if o['filled'] == 0.0:
                 return True
-    return
+    return False
 
 
-def has_open_position(exchange: bybit, symbol: str):
-    positions = exchange.fetch_positions()
+def has_open_position(symbol):
+    positions = EXCHANGE.fetch_positions([symbol])
 
     for item in positions:
         if item['contracts'] != 0.0:
-            if item['info']['symbol'] == symbol:
-
-                return True, item['side']
-
-    return False, ""
+            return True
+    return False
 
 
-def go_trade(action: str, size: int, symbol: str, exchange: bybit):
+def fetch_position_side(symbol):
+    positions = EXCHANGE.fetch_positions([symbol])
+
+    for item in positions:
+        if item['contracts'] != 0.0:
+            return item['side']
+    return ""
+
+
+def fetch_position_size(symbol):
+    positions = EXCHANGE.fetch_positions([symbol])
+
+    for item in positions:
+        if item['contracts'] != 0.0:
+            return item['info']['size']
+    return 0
+
+
+def go_trade(action: str, size: int, symbol: str):
     '''
         takes the action, size and symbol
         opens a position
     '''
 
-    current_price = float(exchange.fetch_ticker(symbol=symbol)['close'])
+    current_price = float(EXCHANGE.fetch_ticker(symbol=symbol)['close'])
     take_profit = round(current_price + current_price*(0.1/100), 2)
     stop_loss = round(current_price - current_price*(0.1/100), 2)
     # print(f'stoploss = {stop_loss} and profit = {take_profit}')
@@ -41,6 +57,6 @@ def go_trade(action: str, size: int, symbol: str, exchange: bybit):
     #     'take_profit': stop_loss, 'stop_loss': take_profit}
 
     amount = size/current_price
-    o = exchange.create_order(symbol, 'market', side,
+    o = EXCHANGE.create_order(symbol, 'market', side,
                               amount=amount)
     # print(o)

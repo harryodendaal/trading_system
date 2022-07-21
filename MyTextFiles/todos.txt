@@ -1,20 +1,21 @@
 DEFS
-1)use dollars instead of the token when saying amount going to buy
 2)choose tokens to trade by 24H change maybe volume?
-3) figure out the hwole buy/long sell/short thing.
 4) the amount a coin get depends on what?
 5) use fastapi. Then setup git system thingy
 6) end of day statistics being sent to me through telegram?
 7) what is usdt perpetual and inverse perpetual and isolated and cross
-8) how to cancel long and short active orders
+8) so import the functions from strategy class and have defulats.
+9) be able to adjust the margin for isolated
 
 BIG ONES:
 1) getting the research thing to work so dont need the rest of jesse.
-
+2) add filter functionality there after complete strate ready for any strategy
 MAYBES
 make strings into small letters automatically?
 start therapy after bot starts making money
 
 NOW:
-not database things yet, just make it be able to run through fastapi. THEN setup the git things and push it as version 1 
 [the pipeline setup and the git branches when pushed to main then release to the serever.]
+ALSO !! add simple bollinger strat
+THEN add the prepare functions things.
+THEN the pipeline
