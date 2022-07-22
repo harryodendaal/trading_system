@@ -6,9 +6,9 @@ from time import sleep
 import datetime
 import pandas as pd
 from pprint import pprint
-from auxillary_functions import add_strategy_components, fetch_position_side, fetch_position_size, go_trade, has_active_order, has_open_position
-from live_strategy_functions import live_before, live_should_cancel, live_should_cancel_entry, live_should_long, live_should_short, live_update_position
-from constants import EXCHANGE
+from .auxillary_functions import add_strategy_components, fetch_position_side, fetch_position_size, go_trade, has_active_order, has_open_position
+from .live_strategy_functions import live_before, live_should_cancel, live_should_cancel_entry, live_should_long, live_should_short, live_update_position
+from .constants import EXCHANGE
 
 # should we have a class for the overarching trading system
 # and then another class for indivdual symbols/trades?

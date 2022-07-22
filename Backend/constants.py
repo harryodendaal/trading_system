@@ -1,5 +1,5 @@
 import ccxt
-from config import APIkey, APIsecret
+from .config import APIkey, APIsecret
 EXCHANGE = ccxt.bybit({
     'apiKey': APIkey,
     'secret': APIsecret,

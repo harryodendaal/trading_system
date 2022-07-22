@@ -1,11 +1,11 @@
 # maybe import in a better way? also the func names the same and maybe have default here so dont for example
 # have to import before
 
-from strategies.__research_strategies import death_cross_20_40
-from strategies.__research_strategies import SimpleBollinger
+from .strategies.__research_strategies import death_cross_20_40
+from .strategies.__research_strategies import SimpleBollinger
 
 # should_cancel, should_cancel_entry, should_long, should_short, update_position, before)
-from constants import STRATEGIES
+from .constants import STRATEGIES
 
 
 def live_before(self):

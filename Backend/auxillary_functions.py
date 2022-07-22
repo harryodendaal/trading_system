@@ -1,5 +1,5 @@
 from pandas import DataFrame
-from constants import EXCHANGE, STRATEGIES
+from .constants import EXCHANGE, STRATEGIES
 from ta.trend import EMAIndicator, IchimokuIndicator
 from ta.volatility import BollingerBands
 

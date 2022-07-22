@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from live_trading import Live_trading
+from Backend.live_trading import LiveTrading
 
 app = FastAPI()
 
@@ -9,6 +9,6 @@ app = FastAPI()
 @app.on_event("startup")
 async def startup_event():
     print("--------------Starting-----------------")
-    cerebro = Live_trading(capital=10000, symbols=[
+    cerebro = LiveTrading(capital=10000, symbols=[
         'ETHUSDT', 'ETCUSDT', 'BITUSDT', 'GMTUSDT', 'OPUSDT', 'RUNEUSDT', 'TRBUSDT'], timeframe='15m',)
     cerebro.run()
