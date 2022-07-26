@@ -15,13 +15,12 @@ from .constants import EXCHANGE
 
 
 class LiveTrading():
-    def __init__(self, capital=10000, symbols=['ETHUSDT'], timeframe='15m') -> None:
+    def __init__(self, capital=10000, symbols=['ETHUSDT'], timeframe='15m', strategy=1, trade_size=10) -> None:
         self.capital = capital
         self.symbols = symbols
         self.timeframe = timeframe
-
-        self.is_long = False
-        self.is_short = False
+        self.strategy = strategy
+        self.trade_size = trade_size
 
     def prepare(self) -> pd.DataFrame:
         '''
@@ -65,18 +64,14 @@ class LiveTrading():
 
     def run(self):
 
-        self.strategy = 1
-
-        trade_size = floor(EXCHANGE.fetch_balance()[
-            'USDT']['total']/len(self.symbols)/2)
-
-        # self.liquidate()
+        # floor(EXCHANGE.fetch_balance()[
+        #     'USDT']['total']/len(self.symbols)/2)
 
         while True:
             for symbol in self.symbols:
                 self.symbol = symbol
+                self.prepare()
 
-                self.prepare()  # this is kinda apart of what before should do
                 ############## START #############
                 live_before(self)
                 # before()
@@ -102,10 +97,10 @@ class LiveTrading():
                     else:
 
                         if live_should_long(self):
-                            go_trade('L', trade_size, symbol)
+                            go_trade('L', self.trade_size, symbol)
                             print("Long Entered")
                         elif live_should_short(self):
-                            go_trade('S', trade_size, symbol)
+                            go_trade('S', self.trade_size, symbol)
                             print("Short Entered")
                         else:
                             live_should_cancel(self)
@@ -115,10 +110,10 @@ class LiveTrading():
                 sleep(2)
 
         # after()  # message myself on telegram
-symbols = ['ETHUSDT', 'ETCUSDT', 'BITUSDT',
-           'GMTUSDT', 'OPUSDT', 'RUNEUSDT', 'TRBUSDT']
-cerebro = LiveTrading(capital=10000, symbols=symbols, timeframe='15m',)
-cerebro.run()
+# symbols = ['ETHUSDT', 'ETCUSDT', 'BITUSDT',
+#            'GMTUSDT', 'OPUSDT', 'RUNEUSDT', 'TRBUSDT']
+# cerebro = LiveTrading(capital=10000, symbols=symbols, timeframe='15m',)
+# cerebro.run()
 # Next up instead trave for now only with inverse perpetual
 
 # things not yet. need to add another strategy maybe.

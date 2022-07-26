@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-
+import ccxt
 from Backend.live_trading import LiveTrading
 
 app = FastAPI()
@@ -9,6 +9,7 @@ app = FastAPI()
 @app.on_event("startup")
 async def startup_event():
     print("--------------Starting-----------------")
+    print('CCXT Version:', ccxt.__version__)
     cerebro = LiveTrading(capital=10000, symbols=[
-        'ETHUSDT', 'ETCUSDT', 'BITUSDT', 'GMTUSDT', 'OPUSDT', 'RUNEUSDT', 'TRBUSDT'], timeframe='15m',)
+        'ETHUSDT', 'ETCUSDT', 'BITUSDT', 'GMTUSDT', 'OPUSDT', 'RUNEUSDT', 'TRBUSDT'], timeframe='15m', strategy=1, trade_size=10)
     cerebro.run()
