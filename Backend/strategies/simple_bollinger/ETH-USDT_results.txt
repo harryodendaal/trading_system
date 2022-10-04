@@ -7,7 +7,7 @@ loading candles...
 
  exchange   | symbol   | timeframe   | strategy        | DNA
 ------------+----------+-------------+-----------------+-------
- Binance    | ETH-USDT | 1h          | SimpleBollinger |
+ Binance    | ETH-USDT | 1h          | simple_bollinger |
 
 
 Executing simulation...  [####################################]  100%

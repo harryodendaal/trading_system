@@ -13,7 +13,7 @@ import jesse.indicators as ta
 from jesse import utils
 
 
-class SimpleBollinger(Strategy):
+class simple_bollinger(Strategy):
     @property
     def bb(self):
         # Bollinger bands using default parameters and hl2 as source
@@ -42,7 +42,8 @@ class SimpleBollinger(Strategy):
 
     def go_long(self):
         # Open long position using entire balance
-        qty = utils.size_to_qty(self.balance, self.price, fee_rate=self.fee_rate)
+        qty = utils.size_to_qty(
+            self.balance, self.price, fee_rate=self.fee_rate)
         self.buy = qty, self.price
 
     def go_short(self):

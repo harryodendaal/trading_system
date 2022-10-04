@@ -2,7 +2,8 @@
 # have to import before
 
 from .strategies.__research_strategies import death_cross_20_40
-from .strategies.__research_strategies import SimpleBollinger
+from .strategies.__research_strategies import simple_bollinger
+from .strategies.__research_strategies import macd_ema
 
 # should_cancel, should_cancel_entry, should_long, should_short, update_position, before)
 from .constants import STRATEGIES
@@ -14,7 +15,9 @@ def live_before(self):
     if strategy == '1':
         return death_cross_20_40.before(self)
     elif strategy == '2':
-        return SimpleBollinger.before(self)
+        return simple_bollinger.before(self)
+    elif strategy == '3':
+        return macd_ema.before(self)
 
 
 def live_update_position(self):
@@ -23,7 +26,9 @@ def live_update_position(self):
     if strategy == '1':
         return death_cross_20_40.update_position(self)
     elif strategy == '2':
-        return SimpleBollinger.update_position(self)
+        return simple_bollinger.update_position(self)
+    elif strategy == '3':
+        return macd_ema.update_position(self)
 
 
 def live_should_short(self):
@@ -32,7 +37,9 @@ def live_should_short(self):
     if strategy == '1':
         return death_cross_20_40.should_short(self)
     elif strategy == '2':
-        return SimpleBollinger.should_short(self)
+        return simple_bollinger.should_short(self)
+    elif strategy == '3':
+        return macd_ema.should_short(self)
 
 
 def live_should_long(self):
@@ -41,7 +48,9 @@ def live_should_long(self):
     if strategy == '1':
         return death_cross_20_40.should_long(self)
     elif strategy == '2':
-        return SimpleBollinger.should_long(self)
+        return simple_bollinger.should_long(self)
+    elif strategy == '3':
+        return macd_ema.should_long(self)
 
 
 def live_should_cancel_entry(self):
@@ -50,7 +59,9 @@ def live_should_cancel_entry(self):
     if strategy == '1':
         return death_cross_20_40.should_cancel_entry(self)
     elif strategy == '2':
-        return SimpleBollinger.should_cancel_entry(self)
+        return simple_bollinger.should_cancel_entry(self)
+    elif strategy == '3':
+        return macd_ema.should_cancel_entry(self)
 
 
 def live_should_cancel(self):
@@ -59,8 +70,10 @@ def live_should_cancel(self):
     if strategy == '1':
         return death_cross_20_40.should_cancel(self)
     elif strategy == '2':
-        return SimpleBollinger.should_cancel(self)
+        return simple_bollinger.should_cancel(self)
+    elif strategy == '3':
+        return macd_ema.should_cancel(self)
 
-# def live_after(self):
-# 	after(self)
-# 	return
+        # def live_after(self):
+        # 	after(self)
+        # 	return

@@ -35,7 +35,7 @@ def should_cancel(self):
 
 
 def should_cancel_entry(self):
-    return
+    return True
 
 # def go_long(self):
 #     qty = utils.size_to_qty(

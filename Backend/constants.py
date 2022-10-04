@@ -11,4 +11,4 @@ EXCHANGE = ccxt.bybit({
     # 'verbose': True
 })
 
-STRATEGIES = ['1', '2']
+STRATEGIES = ['1', '2', '3']

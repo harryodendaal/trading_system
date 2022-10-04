@@ -1,6 +1,6 @@
 from pandas import DataFrame
 from .constants import EXCHANGE, STRATEGIES
-from ta.trend import EMAIndicator, IchimokuIndicator
+from ta.trend import EMAIndicator, IchimokuIndicator, MACD
 from ta.volatility import BollingerBands
 
 
@@ -82,5 +82,12 @@ def add_strategy_components(self, df: DataFrame):
         self.bollinger = BollingerBands(df['Close'])
         self.bb = [self.bollinger.bollinger_hband().iloc[-1],
                    self.bollinger.bollinger_mavg().iloc[-1]]
-
+    elif strategy == '3':
+        # macd[0] = macd line AND
+        # macd[1] = signal line.
+        self.ema = EMAIndicator(
+            close=df['Close'], window=100).ema_indicator().iloc[-1]
+        self.macdonald = MACD(df['Close'])
+        self.macd = [self.macdonald.macd().iloc[-1],
+                     self.macdonald.macd_signal().iloc[-1]]
     return
