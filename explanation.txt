@@ -1,0 +1,2 @@
+#The backend part will contain the jesse infrastructure and is where the strategy testing will be done
+# The LIVE folder will be used only for the things relevant to running the live version.

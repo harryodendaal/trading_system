@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 import ccxt
-from Backend.live_trading import LiveTrading
+from LIVE.live_trading import LiveTrading
 
 app = FastAPI()
 
