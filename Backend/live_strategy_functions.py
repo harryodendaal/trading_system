@@ -8,6 +8,9 @@ from .strategies.__research_strategies import macd_ema
 # should_cancel, should_cancel_entry, should_long, should_short, update_position, before)
 from .constants import STRATEGIES
 
+# maybe sum these all up? so shorter and only do once?
+# like have a startup funciton which sets the function equal to the different ones.
+
 
 def live_before(self):
     strategy = STRATEGIES[self.strategy]

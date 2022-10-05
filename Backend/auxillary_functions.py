@@ -91,3 +91,16 @@ def add_strategy_components(self, df: DataFrame):
         self.macd = [self.macdonald.macd().iloc[-1],
                      self.macdonald.macd_signal().iloc[-1]]
     return
+
+# Need to break these up and work on the infrastructure.
+
+
+def print_out_current_strategy(strategy):
+    if STRATEGIES[strategy] == '0':
+        print('')
+    if STRATEGIES[strategy] == '1':
+        print('death_cross_20_40')
+    if STRATEGIES[strategy] == '2':
+        print('simple_bollinger')
+    if STRATEGIES[strategy] == '3':
+        print('macd_ema')

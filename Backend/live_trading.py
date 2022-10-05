@@ -6,7 +6,7 @@ from time import sleep
 import datetime
 import pandas as pd
 from pprint import pprint
-from .auxillary_functions import add_strategy_components, fetch_position_side, fetch_position_size, go_trade, has_active_order, has_open_position
+from .auxillary_functions import add_strategy_components, fetch_position_side, fetch_position_size, go_trade, has_active_order, has_open_position, print_out_current_strategy
 from .live_strategy_functions import live_before, live_should_cancel, live_should_cancel_entry, live_should_long, live_should_short, live_update_position
 from .constants import EXCHANGE
 
@@ -63,12 +63,10 @@ class LiveTrading():
         return
 
     def run(self):
-
-        # floor(EXCHANGE.fetch_balance()[
-        #     'USDT']['total']/len(self.symbols)/2)
-
+        print_out_current_strategy(self.strategy)
         while True:
             for symbol in self.symbols:
+                print('Searching for trade on: ', symbol)
                 self.symbol = symbol
                 self.prepare()
 
