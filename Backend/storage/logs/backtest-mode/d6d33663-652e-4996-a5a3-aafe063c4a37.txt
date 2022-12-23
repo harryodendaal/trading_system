@@ -1,0 +1,3 @@
+[INFO | 2022-05-05T00:00:00] Saved daily portfolio balance: 10000.0
+[INFO | 2022-05-05T00:15:00] ==== BTC-USDT | 2022-05-05T00:00 | 39696.5 | 39669.0 | 39744.0 | 39669.0 | 488.94
+[INFO | 2022-05-05T00:15:00] Session terminated as the result of an uncaught exception

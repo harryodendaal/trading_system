@@ -36,5 +36,6 @@ routes.py
 .env
 
 #################mine
-trading-view-pine-editor/
 /venv
+
+Backend/storage/logs/*.txt

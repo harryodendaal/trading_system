@@ -43,7 +43,7 @@ class LiveTrading():
         return df
 
     def liquidate(self):
-        # get side here and also amount
+        # does this completely close position?
 
         symbol = self.symbol
         side = fetch_position_side(symbol)
@@ -89,8 +89,9 @@ class LiveTrading():
                     print("Not In Trade")
 
                     if (has_active_order(symbol)):
-                        # only cancels the order not
-                        live_should_cancel_entry(self)
+                        if(live_should_cancel_entry(self)):
+                            # cancel active orders.
+                            pass
                         # the stop loss and take profit orders
                     else:
 
@@ -107,13 +108,4 @@ class LiveTrading():
                 print(now.strftime('%H:%M:%S ') + self.symbol + " |  ")
                 sleep(2)
 
-        # after()  # message myself on telegram
-# symbols = ['ETHUSDT', 'ETCUSDT', 'BITUSDT',
-#            'GMTUSDT', 'OPUSDT', 'RUNEUSDT', 'TRBUSDT']
-# cerebro = LiveTrading(capital=10000, symbols=symbols, timeframe='15m',)
-# cerebro.run()
-# Next up instead trave for now only with inverse perpetual
-
-# things not yet. need to add another strategy maybe.
-# for now stick with all orders later to the specific ones.
-# EXCHANGE.cancel_all_orders('ETHUSDT')
+            # live_after()  # message myself on telegram
