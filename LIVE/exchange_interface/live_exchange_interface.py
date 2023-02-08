@@ -1,10 +1,9 @@
-from pandas import DataFrame
-from .constants import EXCHANGE, STRATEGIES
-from ta.trend import EMAIndicator, IchimokuIndicator, MACD
-from ta.volatility import BollingerBands
+from LIVE.exchange_interface.constants import EXCHANGE
+
 
 
 def has_active_order(symbol: str):
+    '''Check to see if the symbol has an active order'''
     # keep the strategy orders id in database to see
     # which starte executed this order?
     orders = EXCHANGE.fetch_orders(symbol)
@@ -16,6 +15,8 @@ def has_active_order(symbol: str):
 
 
 def has_open_position(symbol):
+    '''Check to see if the symbol has an open position'''
+
     positions = EXCHANGE.fetch_positions([symbol])
 
     for item in positions:
@@ -25,6 +26,7 @@ def has_open_position(symbol):
 
 
 def fetch_position_side(symbol):
+    '''Check to see if position is a long or short'''
     positions = EXCHANGE.fetch_positions([symbol])
 
     for item in positions:
@@ -34,6 +36,7 @@ def fetch_position_side(symbol):
 
 
 def fetch_position_size(symbol):
+    '''Check to see the size of the position'''
     positions = EXCHANGE.fetch_positions([symbol])
 
     for item in positions:
@@ -41,6 +44,10 @@ def fetch_position_size(symbol):
             return item['info']['size']
     return 0
 
+def fetch_ohlcv_data(symbol, timeframe):
+    '''get the candle data for a certain symbol and timeframe.'''
+    return EXCHANGE.fetch_ohlcv(
+            symbol=symbol, timeframe=timeframe, limit=100)
 
 def go_trade(action: str, size: int, symbol: str):
     '''
@@ -63,44 +70,10 @@ def go_trade(action: str, size: int, symbol: str):
                               amount=amount)
     # print(o)
 
+def close_position(symbol, side, size):
+    return EXCHANGE.create_order(
+            symbol, 'market', side, amount=size, params={'reduce_only': True})
 
-def add_strategy_components(self, df: DataFrame):
-    strategy = STRATEGIES[self.strategy]
-
-    if strategy == '1':
-        self.short_ema = EMAIndicator(
-            close=df['Close'], window=20).ema_indicator().iloc[-1]
-        self.long_ema = EMAIndicator(
-            close=df['Close'], window=40).ema_indicator().iloc[-1]
-    elif strategy == '2':
-        self.ichimoku = IchimokuIndicator(
-            high=df['High'], low=df['Low'])
-        self.ichimoku.span_a = self.ichimoku.ichimoku_a().iloc[-1]
-        self.ichimoku.span_a = self.ichimoku.ichimoku_b().iloc[-1]
-
-        # bollinger bands
-        self.bollinger = BollingerBands(df['Close'])
-        self.bb = [self.bollinger.bollinger_hband().iloc[-1],
-                   self.bollinger.bollinger_mavg().iloc[-1]]
-    elif strategy == '3':
-        # macd[0] = macd line AND
-        # macd[1] = signal line.
-        self.ema = EMAIndicator(
-            close=df['Close'], window=100).ema_indicator().iloc[-1]
-        self.macdonald = MACD(df['Close'])
-        self.macd = [self.macdonald.macd().iloc[-1],
-                     self.macdonald.macd_signal().iloc[-1]]
+def invalidNonce_fix_somehow():
+    print(EXCHANGE.load_time_difference())
     return
-
-# Need to break these up and work on the infrastructure.
-
-
-def print_out_current_strategy(strategy):
-    if STRATEGIES[strategy] == '0':
-        print('')
-    if STRATEGIES[strategy] == '1':
-        print('death_cross_20_40')
-    if STRATEGIES[strategy] == '2':
-        print('simple_bollinger')
-    if STRATEGIES[strategy] == '3':
-        print('macd_ema')

@@ -1,5 +1,0 @@
-Connect to instance:
-chmod 400 live_key.pem : makes sure not viewable
-ssh -i "live_key.pem" ubuntu@ec2-18-222-195-165.us-east-2.compute.amazonaws.com
-
-#need to get aws cli working.

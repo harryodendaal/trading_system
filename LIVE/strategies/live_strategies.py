@@ -1,12 +1,12 @@
 # maybe import in a better way? also the func names the same and maybe have default here so dont for example
 # have to import before
 
-from .__research_strategies import death_cross_20_40
-from .__research_strategies import simple_bollinger
-from .__research_strategies import macd_ema
+from .Strategies import death_cross_20_40
+from .Strategies import simple_bollinger
+from .Strategies import macd_ema
 
 # should_cancel, should_cancel_entry, should_long, should_short, update_position, before)
-from .constants import STRATEGIES
+from LIVE.strategies.constants import STRATEGIES
 
 # maybe sum these all up? so shorter and only do once?
 # like have a startup funciton which sets the function equal to the different ones.

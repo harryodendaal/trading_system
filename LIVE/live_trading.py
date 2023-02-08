@@ -1,21 +1,32 @@
 # This should use the functions from the research strategies.
 # and then another layer above this teh cerebro which
 # will decide which strategies to use.
-from math import floor
-from time import sleep
 import datetime
-import pandas as pd
+from math import floor
 from pprint import pprint
-from .auxillary_functions import add_strategy_components, fetch_position_side, fetch_position_size, go_trade, has_active_order, has_open_position, print_out_current_strategy
-from .live_strategy_functions import live_before, live_should_cancel, live_should_cancel_entry, live_should_long, live_should_short, live_update_position
-from .constants import EXCHANGE
+from time import sleep
 
-# should we have a class for the overarching trading system
-# and then another class for indivdual symbols/trades?
+import pandas as pd
+
+from LIVE.strategies.auxillary_functions import (add_strategy_components, print_out_current_strategy)
+from LIVE.exchange_interface.live_exchange_interface import (fetch_position_side, 
+fetch_position_size, go_trade, has_active_order, has_open_position, fetch_ohlcv_data,
+close_position, invalidNonce_fix_somehow)
+from LIVE.exchange_interface.constants import EXCHANGE
+from LIVE.strategies.live_strategies import (live_before, live_should_cancel,
+                                      live_should_cancel_entry,
+                                      live_should_long, live_should_short,
+                                      live_update_position)
+
 
 
 class LiveTrading():
+    '''
+        Want this to just do the trading. The strategies hsould be added before hand this only handle the trading. BUT it will still need to excahge 
+        interface ones. maybe they should be subpackages then, things which are needed.
+    '''
     def __init__(self, capital=10000, symbols=['ETHUSDT'], timeframe='15m', strategy=1, trade_size=10) -> None:
+
         self.capital = capital
         self.symbols = symbols
         self.timeframe = timeframe
@@ -28,42 +39,23 @@ class LiveTrading():
                         returns a dataframe with ohlcv and indicators caculated.
         '''
 
-        bars = EXCHANGE.fetch_ohlcv(
-            symbol=self.symbol, timeframe=self.timeframe, limit=100)
+        bars = fetch_ohlcv_data(self.symbol, self.timeframe)
+
+            
         df = pd.DataFrame(bars[:-1], columns=['Date',
                                               'Open', 'High', 'Low', 'Close', 'Volume'])
         df['Date'] = pd.to_datetime(df['Date'], unit='ms')
 
-        # add the things necessary for strategy function.
         add_strategy_components(self, df)
 
         self.close = df['Close'].iloc[-1]
 
-        # The always ones?
         return df
 
-    def liquidate(self):
-        # does this completely close position?
-
-        symbol = self.symbol
-        side = fetch_position_side(symbol)
-        size = fetch_position_size(symbol)
-
-        # generally will only be called if in position but in case
-        # exit position here if not in position
-        if (side == "" or size == 0):
-            return
-
-        side = 'sell' if (side == 'long') else 'buy'
-
-        trade_res = EXCHANGE.create_order(
-            symbol, 'market', side, amount=size, params={'reduce_only': True})
-        print("Liquidated " + symbol)
-
-        return
 
     def run(self):
         print_out_current_strategy(self.strategy)
+        invalidNonce_fix_somehow()
         while True:
             for symbol in self.symbols:
                 print('Searching for trade on: ', symbol)
@@ -109,3 +101,22 @@ class LiveTrading():
                 sleep(2)
 
             # live_after()  # message myself on telegram
+
+    def liquidate(self):
+        # does this completely close position?
+
+        symbol = self.symbol
+        side = fetch_position_side(symbol)
+        size = fetch_position_size(symbol)
+
+        # generally will only be called if in position but in case
+        # exit position here if not in position
+        if (side == "" or size == 0):
+            return
+
+        side = 'sell' if (side == 'long') else 'buy'
+
+        trade_res = close_position(symbol=symbol, side=side, size=size)
+
+        return
+strut = ['1 ' , '2']

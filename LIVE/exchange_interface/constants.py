@@ -4,7 +4,7 @@ EXCHANGE = ccxt.bybit({
     'apiKey': APIkey,
     'secret': APIsecret,
     'options': {
-        'recvWindow': 7000,
+        'recvWindow': 10000,
         'adjustForTimeDifference': True,
     },
     'enableRateLimit': True,
