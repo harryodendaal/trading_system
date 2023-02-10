@@ -24,7 +24,7 @@ def should_cancel_entry(self) -> bool:
 def update_position(self):
     # Close the position when MACD crosses below the signal line and closing prices is less than 100EMA
     if self.macd[0] < self.macd[1] and self.close < self.ema:
-        self.liquidate()
+        self.liquidate("ETHUSDT")
 
 
 # This is set up for optimization but if you just want to backtest with your own values then change the default value only.

@@ -1,22 +1,6 @@
-# from pprint import pprint
-# from typing import Union
-
-# import jesse.helpers as jh
-# import jesse.indicators as ta
-# from jesse import utils
-
-# from jesse.strategies import Strategy
+from live_backend.exchange_interface.live_exchange_interface import liquidate
 
 
-# # properties
-# def short_ema(self):
-#     # returns the new candles ema value
-#     return ta.ema(self.candles, 20)
-
-
-# def long_ema(self):
-#     return ta.ema(self.candles, 40)
-# # normal functions
 def before(self):
     return
 
@@ -30,12 +14,9 @@ def should_short(self):
     return self.short_ema < self.long_ema
 
 
-def should_cancel(self):
-    return True
-
-
 def should_cancel_entry(self):
     return True
+
 
 # def go_long(self):
 #     qty = utils.size_to_qty(
@@ -54,8 +35,8 @@ def update_position(self) -> None:
     #  If there exist long position, but the signal shows Death Cross, then close the position, and vice versa.
     # should_liquidate()
     if self.is_long and self.short_ema < self.long_ema:
-        self.liquidate()
+        liquidate(self.symbol)
 
     if self.is_short and self.short_ema > self.long_ema:
-        self.liquidate()
+        liquidate(self.symbol)
         # update_position_util(self)
