@@ -10,7 +10,9 @@ from Backend.exchange_interface.live_exchange_interface import (
     has_open_position,
     invalidNonce_fix_somehow,
 )
-from Backend.strategies.strategies import Strategies
+from Backend.strategies.strategy.death_cross_20_40 import DeathCross
+from Backend.strategies.strategy.macd_ema import Macd
+from Backend.strategies.strategy_interface import Strategies
 
 
 class Trading:
@@ -32,46 +34,43 @@ class Trading:
     def run(self):
         """Runs the strategy based of jesse structure."""
         invalidNonce_fix_somehow()
-        strategy = Strategies(
-            strategy=1, timeframe="15m"
-        )  # infutre be able to dynamicllay adjust the strategy
 
-        # todo symbol into strategy
+        # TODO filter the strategies and then apply each    strategy_interface to each symbol
         while True:
             for symbol in self.symbols:
 
-                setattr(strategy, "symbol", symbol)
+                P = Macd.add_strategy_components(Strategies.prepare(symbol, "15m"))
+                # for now just create teh df
+                strategy_interface = Strategies(P)
+
                 print("Searching for trade on: ", symbol)
-
-                strategy.prepare()
-
                 ############## START #############
-                strategy.live_before()
+                strategy_interface.live_before()
                 in_trade = has_open_position(symbol)
 
                 if in_trade:
                     print("In Trade")
-                    strategy.live_update_position()
+                    strategy_interface.live_update_position()
 
                 if not in_trade:
                     print("Not In Trade")
 
                     if has_active_order(symbol):
-                        if strategy.live_should_cancel_entry():
+                        if strategy_interface.live_should_cancel_entry():
                             # cancel active entry orders.
                             pass
                         # the stop loss and take profit orders
                     else:
 
-                        if strategy.live_should_long():
+                        if strategy_interface.live_should_long():
                             go_trade("L", self.trade_size, symbol)
                             print("Long Entered")
-                            strategy.is_long = True
+                            strategy_interface.strategy.is_long = True
 
-                        elif strategy.live_should_short():
+                        elif strategy_interface.live_should_short():
                             go_trade("S", self.trade_size, symbol)
                             print("Short Entered")
-                            strategy.is_short = True
+                            strategy_interface.strategy.is_short = True
 
                 now = datetime.datetime.now()
                 print(now.strftime("%H:%M:%S ") + symbol + " |  ")

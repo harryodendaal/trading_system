@@ -2,7 +2,7 @@ import jesse.indicators as ta
 from jesse import utils
 from jesse.strategies import Strategy, cached
 
-from Testing.new_archive.communal_strategy_blocks import trend_from_pivot_points
+from ffff.new_archive.communal_strategy_blocks import trend_from_pivot_points
 
 
 class the_trading_channel_inspired_strat(Strategy):
@@ -80,15 +80,6 @@ class the_trading_channel_inspired_strat(Strategy):
 # rsi divergence
 # candle stick pattern analysis
 # also to identify double bottoms... tops
-
-# TODO
-# finding out the trend:
-# There are trends on different timeframes.
-# longterm 100 - 200 ma
-# mediumterm 50 ma
-# shortterm 20 ma
-# 'objective' way to identify trend
-# ll cannot be broken. for uptrend.
 
 
 # make these functionalities general and accessible from elsewehere.
