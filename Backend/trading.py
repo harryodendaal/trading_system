@@ -4,14 +4,13 @@
 import datetime
 from time import sleep
 
-from live_backend.exchange_interface.live_exchange_interface import (
+from Backend.exchange_interface.live_exchange_interface import (
     go_trade,
     has_active_order,
     has_open_position,
     invalidNonce_fix_somehow,
 )
-from live_backend.strategies.auxillary_functions import print_out_current_strategy
-from live_backend.strategies.strategies import Strategies
+from Backend.strategies.strategies import Strategies
 
 
 class Trading:
@@ -36,7 +35,6 @@ class Trading:
         strategy = Strategies(
             strategy=1, timeframe="15m"
         )  # infutre be able to dynamicllay adjust the strategy
-        print_out_current_strategy(strategy.strategy)
 
         # todo symbol into strategy
         while True:
@@ -44,6 +42,7 @@ class Trading:
 
                 setattr(strategy, "symbol", symbol)
                 print("Searching for trade on: ", symbol)
+
                 strategy.prepare()
 
                 ############## START #############

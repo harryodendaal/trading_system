@@ -1,6 +1,6 @@
 from typing import List
 
-from live_backend.exchange_interface.constants import EXCHANGE
+from Backend.exchange_interface.constants import EXCHANGE
 
 
 def set_position_mode_of_exchange(symbol):

@@ -1,11 +1,11 @@
 # pylint: disable=E1101
 import pandas as pd
 
-from live_backend.exchange_interface.live_exchange_interface import fetch_ohlcv_data
-from live_backend.strategies.auxillary_functions import add_strategy_components
-from live_backend.strategies.constants import STRATEGIES
+from Backend.exchange_interface.live_exchange_interface import fetch_ohlcv_data
+from Backend.strategies.add_indicators import add_strategy_components
+from Backend.strategies.constants import STRATEGIES
 
-from .examples import death_cross_20_40, macd_ema
+from .strategy import death_cross_20_40, macd_ema
 
 
 class Strategies:

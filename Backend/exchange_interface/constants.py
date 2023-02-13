@@ -14,7 +14,3 @@ EXCHANGE = ccxt.bybit(
         # 'verbose': True
     }
 )
-
-
-# really need to get better interface for below zero is just nothing now.
-STRATEGIES = ["0", "1", "2", "3"]

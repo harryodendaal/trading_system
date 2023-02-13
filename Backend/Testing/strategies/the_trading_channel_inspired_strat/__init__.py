@@ -1,8 +1,8 @@
-
-from jesse.strategies import Strategy, cached
 import jesse.indicators as ta
 from jesse import utils
-from communal_strategy_blocks import trend_from_pivot_points
+from jesse.strategies import Strategy, cached
+
+from Testing.new_archive.communal_strategy_blocks import trend_from_pivot_points
 
 
 class the_trading_channel_inspired_strat(Strategy):
@@ -12,17 +12,15 @@ class the_trading_channel_inspired_strat(Strategy):
 
     @property
     def uptrend_according_pivot_points(self):
-        higher_timeframe_candles = self.get_candles(
-            self.exchange, self.symbol, '12h')
+        higher_timeframe_candles = self.get_candles(self.exchange, self.symbol, "12h")
 
-        return trend_from_pivot_points(higher_timeframe_candles, 'u')
+        return trend_from_pivot_points(higher_timeframe_candles, "u")
 
     @property
     def downtrend_according_pivot_points(self):
-        higher_timeframe_candles = self.get_candles(
-            self.exchange, self.symbol, '12h')
+        higher_timeframe_candles = self.get_candles(self.exchange, self.symbol, "12h")
 
-        return trend_from_pivot_points(higher_timeframe_candles, 'd')
+        return trend_from_pivot_points(higher_timeframe_candles, "d")
 
     @property
     def short_trend(self):
@@ -38,10 +36,8 @@ class the_trading_channel_inspired_strat(Strategy):
     @property
     def long_trend(self):
         # 1hr
-        short_ema = ta.ema(self.get_candles(
-            self.exchange, self.symbol, '12h'), 21)
-        long_ema = ta.ema(self.get_candles(
-            self.exchange, self.symbol, '12h'), 50)
+        short_ema = ta.ema(self.get_candles(self.exchange, self.symbol, "12h"), 21)
+        long_ema = ta.ema(self.get_candles(self.exchange, self.symbol, "12h"), 50)
 
         if short_ema > long_ema:
             return 1
@@ -87,12 +83,12 @@ class the_trading_channel_inspired_strat(Strategy):
 
 # TODO
 # finding out the trend:
-    # There are trends on different timeframes.
-    # longterm 100 - 200 ma
-    # mediumterm 50 ma
-    # shortterm 20 ma
-        # 'objective' way to identify trend
-        # ll cannot be broken. for uptrend.
+# There are trends on different timeframes.
+# longterm 100 - 200 ma
+# mediumterm 50 ma
+# shortterm 20 ma
+# 'objective' way to identify trend
+# ll cannot be broken. for uptrend.
 
 
 # make these functionalities general and accessible from elsewehere.
