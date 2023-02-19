@@ -1,7 +1,6 @@
 import ccxt
 from fastapi import FastAPI
 
-from Backend.exchange_interface.live_exchange_interface import filter_trading_symbols
 from Backend.strategies.strategy_interface import Strategies
 from Backend.trading import Trading
 

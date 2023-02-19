@@ -2,6 +2,8 @@
 import pandas as pd
 
 from Backend.exchange_interface.live_exchange_interface import fetch_ohlcv_data
+from Backend.strategies.strategy.death_cross_20_40 import DeathCross
+from Backend.strategies.strategy.macd_ema import Macd
 from Backend.strategies.strategy.strategy import Strategy
 
 
@@ -25,6 +27,13 @@ class Strategies:
         data_frame["Date"] = pd.to_datetime(data_frame["Date"], unit="ms")
 
         return data_frame
+
+    @staticmethod
+    def available_strategies(symbol, timeframe="15m"):
+        return [
+            Macd.add_strategy_components(Strategies.prepare(symbol, timeframe)),
+            DeathCross.add_strategy_components(Strategies.prepare(symbol, timeframe)),
+        ]
 
     def live_before(self):
         """

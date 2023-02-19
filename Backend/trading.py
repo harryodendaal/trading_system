@@ -10,8 +10,6 @@ from Backend.exchange_interface.live_exchange_interface import (
     has_open_position,
     invalidNonce_fix_somehow,
 )
-from Backend.strategies.strategy.death_cross_20_40 import DeathCross
-from Backend.strategies.strategy.macd_ema import Macd
 from Backend.strategies.strategy_interface import Strategies
 
 
@@ -35,45 +33,44 @@ class Trading:
         """Runs the strategy based of jesse structure."""
         invalidNonce_fix_somehow()
 
-        # TODO filter the strategies and then apply each    strategy_interface to each symbol
         while True:
             for symbol in self.symbols:
+                strats = Strategies.available_strategies(symbol)
+                for s in strats:
+                    strategy_interface = Strategies(s)
 
-                P = Macd.add_strategy_components(Strategies.prepare(symbol, "15m"))
-                # for now just create teh df
-                strategy_interface = Strategies(P)
+                    print("Searching for trade on: ", symbol)
 
-                print("Searching for trade on: ", symbol)
-                ############## START #############
-                strategy_interface.live_before()
-                in_trade = has_open_position(symbol)
+                    ############## START #############
+                    strategy_interface.live_before()
+                    in_trade = has_open_position(symbol)
 
-                if in_trade:
-                    print("In Trade")
-                    strategy_interface.live_update_position()
+                    if in_trade:
+                        print("In Trade")
+                        strategy_interface.live_update_position()
 
-                if not in_trade:
-                    print("Not In Trade")
+                    if not in_trade:
+                        print("Not In Trade")
 
-                    if has_active_order(symbol):
-                        if strategy_interface.live_should_cancel_entry():
-                            # cancel active entry orders.
-                            pass
-                        # the stop loss and take profit orders
-                    else:
+                        if has_active_order(symbol):
+                            if strategy_interface.live_should_cancel_entry():
+                                # cancel active entry orders.
+                                pass
+                            # the stop loss and take profit orders
+                        else:
 
-                        if strategy_interface.live_should_long():
-                            go_trade("L", self.trade_size, symbol)
-                            print("Long Entered")
-                            strategy_interface.strategy.is_long = True
+                            if strategy_interface.live_should_long():
+                                go_trade("L", self.trade_size, symbol)
+                                print("Long Entered")
+                                strategy_interface.strategy.is_long = True
 
-                        elif strategy_interface.live_should_short():
-                            go_trade("S", self.trade_size, symbol)
-                            print("Short Entered")
-                            strategy_interface.strategy.is_short = True
+                            elif strategy_interface.live_should_short():
+                                go_trade("S", self.trade_size, symbol)
+                                print("Short Entered")
+                                strategy_interface.strategy.is_short = True
 
-                now = datetime.datetime.now()
-                print(now.strftime("%H:%M:%S ") + symbol + " |  ")
-                sleep(2)
+                    now = datetime.datetime.now()
+                    print(now.strftime("%H:%M:%S ") + " | " + symbol + " |")
+                    sleep(2)
 
-        # live_after()  # message myself on telegram
+            # live_after()  # message myself on telegram

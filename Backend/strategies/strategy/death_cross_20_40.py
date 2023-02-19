@@ -14,18 +14,12 @@ class DeathCross(Strategy):
         self.is_long = is_long
         self.is_short = is_short
 
-    def before(self):
-        return
-
     def should_long(self):
         # 20 > 40 ; blue > red
         return ema_cross(self.short_ema, self.long_ema)
 
     def should_short(self):
         return ema_cross(self.long_ema, self.short_ema)
-
-    def should_cancel_entry(self):
-        return True
 
     def update_position(self) -> None:
         dc_update_position(self)
