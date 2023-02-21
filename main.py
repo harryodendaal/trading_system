@@ -17,7 +17,7 @@ async def startup_event():
 
     symbols = [
         # "ETHUSDT",
-        "ETCUSDT",
+        # "ETCUSDT",
         "BITUSDT",
         # "GMTUSDT",
         # "OPUSDT",

@@ -1,9 +1,8 @@
 # pylint: disable=E1101
 import pandas as pd
 
-from Backend.exchange_interface.live_exchange_interface import fetch_ohlcv_data
-from Backend.strategies.strategy.death_cross_20_40 import DeathCross
-from Backend.strategies.strategy.macd_ema import Macd
+from Backend.exchange_interface import fetch_ohlcv_data
+from Backend.strategies.strategy import DeathCross, Macd, TestStrategy01
 from Backend.strategies.strategy.strategy import Strategy
 
 
@@ -29,10 +28,13 @@ class Strategies:
         return data_frame
 
     @staticmethod
-    def available_strategies(symbol, timeframe="15m"):
+    def available_strategies(symbol, timeframe="1m"):
         return [
-            Macd.add_strategy_components(Strategies.prepare(symbol, timeframe)),
-            DeathCross.add_strategy_components(Strategies.prepare(symbol, timeframe)),
+            TestStrategy01.add_strategy_components(
+                Strategies.prepare(symbol, timeframe)
+            )
+            # Macd.add_strategy_components(Strategies.prepare(symbol, timeframe)),
+            # DeathCross.add_strategy_components(Strategies.prepare(symbol, timeframe)),
         ]
 
     def live_before(self):
@@ -57,14 +59,15 @@ class Strategies:
         If not position is open and no order is active
         returns whether or not should enter short.
         """
-        self.strategy.should_short()
+        return self.strategy.should_short()
 
     def live_should_long(self):
+
         """
         If not position is open and no order is active
         returns whether or not should enter long.
         """
-        self.strategy.should_short()
+        return self.strategy.should_long()
 
     def live_should_cancel_entry(self):
         """
@@ -72,4 +75,4 @@ class Strategies:
         returns whether that order should be cancelled
         """
 
-        self.strategy.should_cancel_entry()
+        return self.strategy.should_cancel_entry()

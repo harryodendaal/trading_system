@@ -4,11 +4,12 @@
 import datetime
 from time import sleep
 
-from Backend.exchange_interface.live_exchange_interface import (
+from Backend.exchange_interface import (
     go_trade,
     has_active_order,
     has_open_position,
     invalidNonce_fix_somehow,
+    set_leverage,
 )
 from Backend.strategies.strategy_interface import Strategies
 
@@ -32,6 +33,7 @@ class Trading:
     def run(self):
         """Runs the strategy based of jesse structure."""
         invalidNonce_fix_somehow()
+        # set_leverage(1, "BITUSDT")
 
         while True:
             for symbol in self.symbols:
