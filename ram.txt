@@ -1,0 +1,6 @@
+Main Motivation: create a trading bot which will give me financial freedom, which will enable me to have freedom.
+
+Goal: Create a profitable strategy using jesse and machine learning.
+
+
+things to remember from last session:
