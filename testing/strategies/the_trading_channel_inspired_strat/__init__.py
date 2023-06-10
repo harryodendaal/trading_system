@@ -2,11 +2,10 @@ import jesse.indicators as ta
 from jesse import utils
 from jesse.strategies import Strategy, cached
 
-from ffff.new_archive.communal_strategy_blocks import trend_from_pivot_points
+from testing.new_archive.communal_strategy_blocks import trend_from_pivot_points
 
 
 class the_trading_channel_inspired_strat(Strategy):
-
     # create another property do this based of of pivot points and then since we are making long trades
     # the trend will be if a ll of pull back is not broken. so when new higher high, cannot brake previous lower low.
 
