@@ -42,3 +42,4 @@ routes.py
 /venv
 
 live_backend/Testing/storage/logs/*.txt
+/old

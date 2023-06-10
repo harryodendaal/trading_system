@@ -1,1 +1,0 @@
-[INFO | 2022-10-06T09:28:55] Session terminated as the result of an uncaught exception

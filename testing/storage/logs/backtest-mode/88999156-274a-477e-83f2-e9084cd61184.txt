@@ -1,3 +1,0 @@
-[INFO | 2022-08-24T00:00:00] Saved daily portfolio balance: 10000.0
-[INFO | 2022-08-24T01:00:00] ==== BTC-USDT | 2022-08-24T00:00 | 21516.5 | 21375.0 | 21537.5 | 21325.5 | 7679.64
-[INFO | 2022-08-24T01:00:00] Session terminated as the result of an uncaught exception

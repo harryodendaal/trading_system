@@ -1,6 +1,0 @@
-1 dont add the property ones.
-2 dont add go_long and go_short will be handled on other side.
-3 not yet taking hyperparameter optimization into account. how would I?
-
-
-should this folder be renamed from __research_stratgies to live strategies?
