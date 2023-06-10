@@ -1,10 +1,7 @@
 from ta.trend import MACD, EMAIndicator
 
-from Backend.strategies.blocks.entering import (
-    close_above_ema_and_macd_line_above_signal,
-)
-from Backend.strategies.blocks.managing.positions import macd_update_position
-from Backend.strategies.strategy.strategy import Strategy
+from Backend.exchange_interface.live_exchange_interface import liquidate
+from Backend.strategies.strategy._strategy_template import Strategy
 
 
 class Macd(Strategy):
@@ -13,14 +10,19 @@ class Macd(Strategy):
         self.macd = macd
         self.close = close
 
+    def print_name(self):
+        print("MACE EMA")
+
     def should_long(self):
         # return true if close is above EMA and MACD line is above signal line
-        return close_above_ema_and_macd_line_above_signal(
-            self.close, self.ema, self.macd
-        )
 
-    def update_position(self):
-        macd_update_position(self)
+        return self.close > self.ema and self.macd[0] > self.macd[1]
+
+    def update_position(self, symbol):
+        # Close the position when MACD crosses below the signal line and closing prices is less than 100EMA
+
+        if self.macd[0] < self.macd[1] and self.close < self.ema:
+            liquidate(symbol)
 
     @classmethod
     def add_strategy_components(cls, df):

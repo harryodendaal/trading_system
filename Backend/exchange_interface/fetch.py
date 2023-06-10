@@ -20,8 +20,8 @@ def has_open_position(symbol):
 
     for item in positions:
         if item["contracts"] != 0.0:
-            return True
-    return False
+            return True, positions[0]["side"]
+    return False, positions[0]["side"]
 
 
 def fetch_position_side(symbol):

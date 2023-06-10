@@ -24,7 +24,6 @@ class Trading:
         symbols,
         trade_size,
     ) -> None:
-
         self.symbols = symbols
         self.trade_size = trade_size
         #
@@ -41,38 +40,42 @@ class Trading:
                 for s in strats:
                     strategy_interface = Strategies(s)
 
-                    print("Searching for trade on: ", symbol)
+                    print("Trading: ", symbol)
+                    print("strategy: ")
+                    strategy_interface.strategy_name()
 
                     ############## START #############
                     strategy_interface.live_before()
-                    in_trade = has_open_position(symbol)
+                    in_trade, side = has_open_position(symbol)
 
                     if in_trade:
+                        if side == "short":
+                            strategy_interface.strategy.is_short = True
+                        else:
+                            strategy_interface.strategy.is_long = True
                         print("In Trade")
-                        strategy_interface.live_update_position()
+                        strategy_interface.live_update_position(symbol)
 
                     if not in_trade:
                         print("Not In Trade")
 
                         if has_active_order(symbol):
                             if strategy_interface.live_should_cancel_entry():
-                                # cancel active entry orders.
+                                # cancel active entry orders. currently only doing market orders.
                                 pass
                             # the stop loss and take profit orders
                         else:
-
                             if strategy_interface.live_should_long():
                                 go_trade("L", self.trade_size, symbol)
                                 print("Long Entered")
-                                strategy_interface.strategy.is_long = True
 
                             elif strategy_interface.live_should_short():
                                 go_trade("S", self.trade_size, symbol)
                                 print("Short Entered")
-                                strategy_interface.strategy.is_short = True
 
                     now = datetime.datetime.now()
-                    print(now.strftime("%H:%M:%S ") + " | " + symbol + " |")
+                    print("__________________________________________________")
+                    # print(now.strftime("%H:%M:%S ") + " | " + symbol + " |")
                     sleep(2)
 
             # live_after()  # message myself on telegram

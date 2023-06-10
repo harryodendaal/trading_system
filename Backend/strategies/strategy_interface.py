@@ -3,7 +3,7 @@ import pandas as pd
 
 from Backend.exchange_interface import fetch_ohlcv_data
 from Backend.strategies.strategy import DeathCross, Macd, TestStrategy01
-from Backend.strategies.strategy.strategy import Strategy
+from Backend.strategies.strategy._strategy_template import Strategy
 
 
 class Strategies:
@@ -30,9 +30,7 @@ class Strategies:
     @staticmethod
     def available_strategies(symbol, timeframe="1m"):
         return [
-            TestStrategy01.add_strategy_components(
-                Strategies.prepare(symbol, timeframe)
-            )
+            DeathCross.add_strategy_components(Strategies.prepare(symbol, timeframe))
             # Macd.add_strategy_components(Strategies.prepare(symbol, timeframe)),
             # DeathCross.add_strategy_components(Strategies.prepare(symbol, timeframe)),
         ]
@@ -46,13 +44,13 @@ class Strategies:
         """
         self.strategy.before()
 
-    def live_update_position(self):
+    def live_update_position(self, symbol):
         """
         Called only if you have an open position, used to update the exit point
         (dynamically adjusting take-profit or stop-loss) or
         to add the size of the position if needed.
         """
-        self.strategy.update_position()
+        self.strategy.update_position(symbol)
 
     def live_should_short(self):
         """
@@ -62,7 +60,6 @@ class Strategies:
         return self.strategy.should_short()
 
     def live_should_long(self):
-
         """
         If not position is open and no order is active
         returns whether or not should enter long.
@@ -76,3 +73,6 @@ class Strategies:
         """
 
         return self.strategy.should_cancel_entry()
+
+    def strategy_name(self):
+        return self.strategy.print_name()

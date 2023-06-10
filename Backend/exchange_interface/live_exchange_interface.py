@@ -22,6 +22,7 @@ def go_trade(action: str, trade_size: int, symbol: str):
 
     amount = trade_size / current_price
     execute.open_position(symbol, side, amount)
+    return
 
 
 def invalidNonce_fix_somehow():
@@ -31,6 +32,7 @@ def invalidNonce_fix_somehow():
 
 
 def liquidate(symbol: str):
+    print("liquidate position on: " + symbol)
     # does this completely close position?
 
     side = fetch.fetch_position_side(symbol)
@@ -61,7 +63,6 @@ def filter_trading_symbols(symbols: List[str], trade_size: int):
     for i in markets:
         if i["id"] in symbols:
             if i["type"] == "spot":
-
                 min_amount = float(i["info"]["minTradeQty"])
                 amount_buy = trade_size / fetch.fetch_symbol_currentprice(i["id"])
                 min_price_precision = float(i["info"]["minPricePrecision"])

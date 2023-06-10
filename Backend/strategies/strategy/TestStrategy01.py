@@ -1,6 +1,6 @@
 from ta.trend import EMAIndicator
 
-from Backend.strategies.strategy.strategy import Strategy
+from Backend.strategies.strategy._strategy_template import Strategy
 
 
 class TestStrategy01(Strategy):
@@ -18,7 +18,6 @@ class TestStrategy01(Strategy):
 
     @classmethod
     def add_strategy_components(cls, df):
-
         short_ema = (
             EMAIndicator(close=df["Close"], window=20).ema_indicator().iloc[-1],
         )

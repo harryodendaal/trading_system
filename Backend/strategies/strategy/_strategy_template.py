@@ -5,7 +5,7 @@ class Strategy:
     def before(self):
         pass
 
-    def update_position(self):
+    def update_position(self, symbol):
         pass
 
     def should_cancel_entry(self):

@@ -1,10 +1,7 @@
 from ta.trend import MACD, EMAIndicator
 
-from Backend.strategies.blocks.entering import ema_cross
-from Backend.strategies.blocks.managing.positions import dc_update_position
-from Backend.strategies.strategy.strategy import Strategy
-
-# overwrite strategy, then after finishing this part make it so that strategies are easy to test.
+from Backend.exchange_interface.live_exchange_interface import liquidate
+from Backend.strategies.strategy._strategy_template import Strategy
 
 
 class DeathCross(Strategy):
@@ -14,20 +11,27 @@ class DeathCross(Strategy):
         self.is_long = is_long
         self.is_short = is_short
 
+    def print_name(self):
+        print("DEATH CROSS 20 40")
+
     def should_long(self):
         # 20 > 40 ; blue > red
-        return ema_cross(self.short_ema, self.long_ema)
+        return self.short_ema > self.long_ema
 
     def should_short(self):
-        return ema_cross(self.long_ema, self.short_ema)
+        return self.long_ema > self.short_ema
 
-    def update_position(self) -> None:
-        dc_update_position(self)
+    def update_position(self, symbol) -> None:
+        if self.is_long and self.short_ema < self.long_ema:
+            liquidate(symbol)
+
+        if self.is_short and self.short_ema > self.long_ema:
+            liquidate(symbol)
 
     @classmethod
     def add_strategy_components(cls, df):
         short_ema_value = (
-            EMAIndicator(close=df["Close"], window=20).ema_indicator().iloc[-1],
+            EMAIndicator(close=df["Close"], window=20).ema_indicator().iloc[-1]
         )
         long_ema_value = (
             EMAIndicator(close=df["Close"], window=40).ema_indicator().iloc[-1]
